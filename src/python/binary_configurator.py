@@ -105,7 +105,7 @@ def patch_unified(args, options):
         JSONEncoder().encode(json_flags),
         args.target,
         'tx' if options.deviceType is DeviceType.TX else 'rx',
-        '2400' if options.radioChip is RadioType.SX1280 else '900' if options.radioChip is RadioType.SX127X else 'dual',
+        '2400' if options.radioChip is RadioType.SX1280 else '900' if options.radioChip is RadioType.SX127X else '433' if RadioType.SX127X else 'dual',
         '32' if options.mcuType is MCUType.ESP32 and options.deviceType is DeviceType.RX else '',
         options.luaName,
         args.rx_as_tx
@@ -133,7 +133,7 @@ def ask_for_firmware(args):
                     config = jmespath.search('.'.join(map(lambda s: f'"{s}"', args.target.split('.'))), targets)
         else:
             i = 0
-            for k in jmespath.search(f'*.["{moduletype}_2400","{moduletype}_900","{moduletype}_dual"][].*[]', targets):
+            for k in jmespath.search(f'*.["{moduletype}_2400","{moduletype}_900","{moduletype}_433","{moduletype}_dual"][].*[]', targets):
                 i += 1
                 products.append(k)
                 print(f"{i}) {k['product_name']}")
@@ -256,7 +256,7 @@ def main():
         options = FirmwareOptions(
             MCUType.ESP32 if config['platform'].startswith('esp32') else MCUType.ESP8266,
             DeviceType.RX if '.rx_' in args.target else DeviceType.TX,
-            RadioType.SX127X if '_900.' in args.target else RadioType.SX1280 if '_2400.' in args.target else RadioType.LR1121,
+            RadioType.SX127X if '_433.' in args.target else RadioType.SX127X if '_900.' in args.target else RadioType.SX1280 if '_2400.' in args.target else RadioType.LR1121,
             config['lua_name'] if 'lua_name' in config else '',
             config['stlink']['bootloader'] if 'stlink' in config else '',
             config['stlink']['offset'] if 'stlink' in config else 0,
