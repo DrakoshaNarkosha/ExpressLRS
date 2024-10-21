@@ -84,11 +84,6 @@ void OLEDDisplay::displaySplashScreen()
         {
             u8g2->drawXBM(0, 0, 128, 64, image);
         }
-
-        char buffer[50];
-        snprintf(buffer, sizeof(buffer), "ELRS-%.6s", version);
-        u8g2->setFont(u8g2_font_profont10_mr);
-        drawCentered(60, buffer);
     }
     u8g2->sendBuffer();
 }
