@@ -171,7 +171,17 @@ void SX127xDriver::ConfigLoraDefaults()
   hal.writeRegisterBits(SX127X_REG_DIO_MAPPING_1, SX127X_DIO0_RXTX_DONE, SX127X_DIO0_MASK, SX12XX_Radio_All); //undocumented "hack", looking at Table 18 from datasheet SX127X_REG_DIO_MAPPING_1 = 11 appears to be unspported by infact it generates an intterupt on both RXdone and TXdone, this saves switching modes.
   hal.writeRegister(SX127X_REG_LNA, SX127X_LNA_BOOST_ON, SX12XX_Radio_All);
   hal.writeRegister(SX1278_REG_MODEM_CONFIG_3, SX1278_AGC_AUTO_ON | SX1278_LOW_DATA_RATE_OPT_OFF, SX12XX_Radio_All);
-  hal.writeRegisterBits(SX127X_REG_OCP, SX127X_OCP_ON | SX127X_OCP_150MA, SX127X_OCP_MASK, SX12XX_Radio_All); //150ma max current
+  hal.writeRegisterBits(SX127X_REG_OCP, SX127X_OCP_ON | SX127X_OCP_240MA, SX127X_OCP_MASK, SX12XX_Radio_All); //240ma max current
+  if (!OPT_USE_SX1276_RFO_HF)
+  {
+      DBGLN("SX127x use PA_BOOST pin, write REG_PA_DAC");
+      hal.writeRegister(SX1278_REG_PA_DAC, SX127X_PA_DAC_HIGH_PWR, SX12XX_Radio_All);
+  }
+  else
+  {
+      DBGLN("SX127x use RFO_HF pin, don`t write REG_PA_DAC");
+  }
+
   SetPreambleLength(SX127X_PREAMBLE_LENGTH_LSB);
 }
 
@@ -630,7 +640,6 @@ void SX127xDriver::Config(uint8_t bw, uint8_t sf, uint8_t cr, uint32_t freq, uin
 void SX127xDriver::Config(uint8_t bw, uint8_t sf, uint8_t cr, uint32_t freq, uint8_t preambleLen, uint8_t syncWord, bool InvertIQ, uint8_t _PayloadLength, uint32_t interval)
 {
   PayloadLength = _PayloadLength;
-  ConfigLoraDefaults();
   SetPreambleLength(preambleLen);
   SetSpreadingFactor((SX127x_SpreadingFactor)sf);
   SetBandwidthCodingRate((SX127x_Bandwidth)bw, (SX127x_CodingRate)cr);
