@@ -56,6 +56,7 @@
 // #define POWER_OUTPUT_DAC (hardware_int(HARDWARE_power_control)==2)  // stm32 only
 #define POWER_OUTPUT_DACWRITE (hardware_int(HARDWARE_power_control)==3)
 #define POWER_OUTPUT_FIXED -99
+#define POWER_ENABLE_PA_BOOST hardware_i16_array(HARDWARE_power_enable_pa_boost)
 #define POWER_OUTPUT_VALUES hardware_i16_array(HARDWARE_power_values)
 #define POWER_OUTPUT_VALUES2 hardware_i16_array(HARDWARE_power_values2)
 #define POWER_OUTPUT_VALUES_DUAL hardware_i16_array(HARDWARE_power_values_dual)

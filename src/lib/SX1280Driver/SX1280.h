@@ -33,7 +33,7 @@ public:
     void SetFrequencyHz(uint32_t freq, SX12XX_Radio_Number_t radioNumber);
     void SetFrequencyReg(uint32_t freq, SX12XX_Radio_Number_t radioNumber = SX12XX_Radio_All);
     void SetRxTimeoutUs(uint32_t interval);
-    void SetOutputPower(int8_t power);
+    void SetOutputPower(int8_t power, bool paBoostEnable = false);
     void startCWTest(uint32_t freq, SX12XX_Radio_Number_t radioNumber);
 
 

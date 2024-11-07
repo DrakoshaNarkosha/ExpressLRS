@@ -135,8 +135,6 @@ typedef enum
 #define SX127X_OCP_150MA 0b00010010 //  4     0     OCP current: I_max(OCP_TRIM = 10010) = 150 mA
 #define SX127X_OCP_240MA 0b00011111 //  4     0     OCP current: I_max(OCP_TRIM = 11111) = 240 mA
 #define SX127X_OCP_MASK 0b00111111
-// SX127x_REG_PA_DAC
-#define SX127X_PA_DAC_HIGH_PWR 0b10000111
 
 // SX127X_REG_LNA
 #define SX127X_LNA_GAIN_0 0b00000000    //  7     5     LNA gain setting:   not used

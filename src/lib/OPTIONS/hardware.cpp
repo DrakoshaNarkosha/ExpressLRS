@@ -63,6 +63,7 @@ static const struct {
     {HARDWARE_power_pdet_intercept, "power_pdet_intercept", FLOAT},
     {HARDWARE_power_pdet_slope, "power_pdet_slope", FLOAT},
     {HARDWARE_power_control, "power_control", INT},
+    {HARDWARE_power_enable_pa_boost, "power_enable_pa_boost", ARRAY},
     {HARDWARE_power_values, "power_values", ARRAY},
     {HARDWARE_power_values2, "power_values2", ARRAY},
     {HARDWARE_power_values_dual, "power_values_dual", ARRAY},

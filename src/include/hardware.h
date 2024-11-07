@@ -50,6 +50,7 @@ typedef enum {
     HARDWARE_power_pdet_slope,
 
     HARDWARE_power_control,
+    HARDWARE_power_enable_pa_boost,
     HARDWARE_power_values,
     HARDWARE_power_values2,
     HARDWARE_power_values_dual,

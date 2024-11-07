@@ -41,7 +41,7 @@ public:
     void SetBandwidthCodingRate(SX127x_Bandwidth bw, SX127x_CodingRate cr);
     void SetCRCMode(bool on); //false for off
     void SetSyncWord(uint8_t syncWord);
-    void SetOutputPower(uint8_t Power);
+    void SetOutputPower(uint8_t Power, bool paBoostEnable);
     void SetPreambleLength(uint8_t PreambleLen);
     void SetSpreadingFactor(SX127x_SpreadingFactor sf);
     void SetRxTimeoutUs(uint32_t interval);
@@ -91,6 +91,7 @@ private:
     uint8_t currSyncWord;
     uint8_t currPreambleLen;
     uint8_t pwrCurrent;
+    uint8_t paBoostPending;
     int16_t pwrPending;
     uint8_t lowFrequencyMode;
 

@@ -2,6 +2,8 @@
 #include "logging.h"
 #include "POWERMGNT.h"
 
+#define ENABLE_PA_BOOST enablePABoostValues ? enablePABoostValues[Power] : false
+
 uint8_t powerToCrsfPower(PowerLevels_e Power)
 {
     // Crossfire's power levels as defined in opentx:radio/src/telemetry/crossfire.cpp
@@ -80,15 +82,18 @@ int8_t POWERMGNT::CurrentSX1280Power = 0;
 #if defined(TARGET_UNIFIED_TX) || defined(TARGET_UNIFIED_RX)
 static const int16_t *powerValues;
 static const int16_t *powerValuesDual;
+static const int16_t *enablePABoostValues;
 #else
 #if defined(POWER_OUTPUT_VALUES)
 static const int16_t powerValues[] = POWER_OUTPUT_VALUES;
+static const int16_t enablePABoostValues[] = POWER_ENABLE_PA_BOOST;
 #if defined(POWER_OUTPUT_DAC) && !defined(TARGET_UNIFIED_TX) && !defined(TARGET_UNIFIED_RX)
 static const int16_t powerValues868[] = POWER_OUTPUT_VALUES_868;
 extern bool isDomain868();
 #endif
 #else
 static const int16_t *powerValues = nullptr;
+static const int16_t *enablePABoostValues = nullptr;
 #endif
 #endif
 
@@ -122,7 +127,7 @@ void POWERMGNT::incSX1280Output()
     if (CurrentSX1280Power < 13 && CurrentSX1280Power < powerValues[CurrentPower] + 3)
     {
         CurrentSX1280Power++;
-        Radio.SetOutputPower(CurrentSX1280Power);
+        Radio.SetOutputPower(CurrentSX1280Power, false);
     }
 }
 
@@ -132,7 +137,7 @@ void POWERMGNT::decSX1280Output()
     if (CurrentSX1280Power > -18 && CurrentSX1280Power > powerValues[CurrentPower] - 3)
     {
         CurrentSX1280Power--;
-        Radio.SetOutputPower(CurrentSX1280Power);
+        Radio.SetOutputPower(CurrentSX1280Power, false);
     }
 }
 
@@ -225,6 +230,10 @@ void POWERMGNT::init()
     PowerLevelContainer::CurrentPower = PWR_COUNT;
 
 #if defined(TARGET_UNIFIED_TX) || defined(TARGET_UNIFIED_RX)
+    if (POWER_ENABLE_PA_BOOST != nullptr)
+    {
+        enablePABoostValues = POWER_ENABLE_PA_BOOST;
+    }
     powerValues = POWER_OUTPUT_VALUES;
     if (POWER_OUTPUT_VALUES_DUAL != nullptr)
     {
@@ -289,7 +298,7 @@ void POWERMGNT::setPower(PowerLevels_e Power)
     {
         if (POWER_OUTPUT_VALUES2 != nullptr)
         {
-            Radio.SetOutputPower(POWER_OUTPUT_VALUES2[Power - MinPower]);
+            Radio.SetOutputPower(POWER_OUTPUT_VALUES2[Power - MinPower], ENABLE_PA_BOOST);
         }
         #if defined(PLATFORM_ESP32_S3) || defined(PLATFORM_ESP32_C3)
         ERRLN("ESP32-S3 does not have a DAC");
@@ -301,12 +310,12 @@ void POWERMGNT::setPower(PowerLevels_e Power)
     #endif
     if (POWER_OUTPUT_FIXED != -99)
     {
-        Radio.SetOutputPower(POWER_OUTPUT_FIXED);
+        Radio.SetOutputPower(POWER_OUTPUT_FIXED, false);
     }
     else if (powerValues != nullptr)
     {
         CurrentSX1280Power = powerValues[Power - MinPower] + powerCaliValues[Power];
-        Radio.SetOutputPower(CurrentSX1280Power);
+        Radio.SetOutputPower(CurrentSX1280Power, ENABLE_PA_BOOST);
     }
 #endif
 

@@ -94,11 +94,11 @@ bool SX127xDriver::Begin(uint32_t minimumFrequency, uint32_t maximumFrequency)
   {
     if (OPT_USE_SX1276_RFO_HF)
     {
-      SetOutputPower(SX127X_MAX_OUTPUT_POWER_RFO_HF);
+      SetOutputPower(SX127X_MAX_OUTPUT_POWER_RFO_HF, false);
     }
     else
     {
-      SetOutputPower(SX127X_MAX_OUTPUT_POWER);
+      SetOutputPower(SX127X_MAX_OUTPUT_POWER, false);
     }
   }
   CommitOutputPower();
@@ -172,15 +172,6 @@ void SX127xDriver::ConfigLoraDefaults()
   hal.writeRegister(SX127X_REG_LNA, SX127X_LNA_BOOST_ON, SX12XX_Radio_All);
   hal.writeRegister(SX1278_REG_MODEM_CONFIG_3, SX1278_AGC_AUTO_ON | SX1278_LOW_DATA_RATE_OPT_OFF, SX12XX_Radio_All);
   hal.writeRegisterBits(SX127X_REG_OCP, SX127X_OCP_ON | SX127X_OCP_240MA, SX127X_OCP_MASK, SX12XX_Radio_All); //240ma max current
-  if (!OPT_USE_SX1276_RFO_HF)
-  {
-      DBGLN("SX127x use PA_BOOST pin, write REG_PA_DAC");
-      hal.writeRegister(SX1278_REG_PA_DAC, SX127X_PA_DAC_HIGH_PWR, SX12XX_Radio_All);
-  }
-  else
-  {
-      DBGLN("SX127x use RFO_HF pin, don`t write REG_PA_DAC");
-  }
 
   SetPreambleLength(SX127X_PREAMBLE_LENGTH_LSB);
 }
@@ -287,10 +278,12 @@ void SX127xDriver::SetSyncWord(uint8_t syncWord)
  * @brief: Schedule an output power change after the next transmit
  * The radio must be in SX127x_OPMODE_STANDBY to change the power
  ***/
-void SX127xDriver::SetOutputPower(uint8_t Power)
+void SX127xDriver::SetOutputPower(uint8_t Power, bool paBoostEnable)
 {
   uint8_t pwrNew;
   Power &= SX127X_PA_POWER_MASK;
+
+  paBoostPending = paBoostEnable ? SX127X_PA_BOOST_ON : SX127X_PA_BOOST_OFF;
 
   if (OPT_USE_SX1276_RFO_HF)
   {
@@ -315,6 +308,7 @@ void ICACHE_RAM_ATTR SX127xDriver::CommitOutputPower()
   pwrCurrent = pwrPending & 0xFF;
   pwrPending = PWRPENDING_NONE;
   hal.writeRegister(SX127X_REG_PA_CONFIG, pwrCurrent, SX12XX_Radio_All);
+  hal.writeRegister(SX1278_REG_PA_DAC, paBoostPending, SX12XX_Radio_All);
 }
 
 void SX127xDriver::SetPreambleLength(uint8_t PreambleLen)

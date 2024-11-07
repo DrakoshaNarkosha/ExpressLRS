@@ -205,7 +205,7 @@ void SX1280Driver::SetRxTimeoutUs(uint32_t interval)
 /***
  * @brief: Schedule an output power change after the next transmit
  ***/
-void SX1280Driver::SetOutputPower(int8_t power)
+void SX1280Driver::SetOutputPower(int8_t power, bool paBoostEnable)
 {
     uint8_t pwrNew = constrain(power, SX1280_POWER_MIN, SX1280_POWER_MAX) + (-SX1280_POWER_MIN);
 
