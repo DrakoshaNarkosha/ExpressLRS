@@ -43,6 +43,7 @@ const fhss_config_t domains[] = {
 #endif
 
 // Our table of FHSS frequencies. Define a regulatory domain to select the correct set for your location and radio
+static fhss_config_t FHSSconfigLocal;
 const fhss_config_t *FHSSconfig;
 const fhss_config_t *FHSSconfigDualBand;
 
@@ -72,15 +73,39 @@ bool FHSSuseDualBand = false;
 uint16_t primaryBandCount;
 uint16_t secondaryBandCount;
 
+static inline void updateFrequencySettings()
+{
+    if (FREQUENCY_CUSTOM)
+    {
+        FHSSconfigLocal.domain      = "Custom";
+        FHSSconfigLocal.freq_start  = FREQUENCY_MINIMUM;
+        FHSSconfigLocal.freq_stop   = FREQUENCY_MAXIMUM;
+        FHSSconfigLocal.freq_count  = FREQUENCY_COUNT;
+        FHSSconfigLocal.freq_center = FREQUENCY_CENTER;
+    }
+    else
+    {
+        FHSSconfigLocal.domain      = domains[firmwareOptions.domain].domain;
+        FHSSconfigLocal.freq_start  = domains[firmwareOptions.domain].freq_start;
+        FHSSconfigLocal.freq_stop   = domains[firmwareOptions.domain].freq_stop;
+        FHSSconfigLocal.freq_count  = domains[firmwareOptions.domain].freq_count;
+        FHSSconfigLocal.freq_center = domains[firmwareOptions.domain].freq_center;
+    }
+}
+
 void FHSSrandomiseFHSSsequence(const uint32_t seed)
 {
-    FHSSconfig = &domains[firmwareOptions.domain];
+    updateFrequencySettings();
+    FHSSconfig = &FHSSconfigLocal;
     sync_channel = FHSSconfig->freq_count / 2;
     freq_spread = (FHSSconfig->freq_stop - FHSSconfig->freq_start) * FREQ_SPREAD_SCALE / (FHSSconfig->freq_count - 1);
     primaryBandCount = (FHSS_SEQUENCE_LEN / FHSSconfig->freq_count) * FHSSconfig->freq_count;
 
     DBGLN("Setting %s Mode", FHSSconfig->domain);
-    DBGLN("Number of FHSS frequencies = %u", FHSSconfig->freq_count);
+    DBGLN("Frequency start %d", FHSSconfig->freq_start);
+    DBGLN("Frequency stop %d", FHSSconfig->freq_stop);
+    DBGLN("Number of FHSS frequencies %d", FHSSconfig->freq_count);
+    DBGLN("Frequency center %d", FHSSconfig->freq_center);
     DBGLN("Sync channel = %u", sync_channel);
 
     FHSSrandomiseFHSSsequenceBuild(seed, FHSSconfig->freq_count, sync_channel, FHSSsequence);

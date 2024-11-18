@@ -25,6 +25,13 @@
 #define USE_HARDWARE_DCDC
 #define OPT_USE_HARDWARE_DCDC hardware_flag(HARDWARE_radio_dcdc)
 
+// Radio frequency
+#define FREQUENCY_CUSTOM hardware_flag(HARDWARE_frequency_custom)
+#define FREQUENCY_MINIMUM hardware_int(HARDWARE_frequency_minimum)
+#define FREQUENCY_MAXIMUM hardware_int(HARDWARE_frequency_maximum)
+#define FREQUENCY_COUNT hardware_int(HARDWARE_frequency_count)
+#define FREQUENCY_CENTER hardware_int(HARDWARE_frequency_center)
+
 // Radio power
 #define GPIO_PIN_PA_ENABLE hardware_pin(HARDWARE_power_enable)
 #define GPIO_PIN_RFamp_APC1 hardware_pin(HARDWARE_power_apc1)

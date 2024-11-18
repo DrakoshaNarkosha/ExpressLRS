@@ -31,6 +31,13 @@ typedef enum {
     HARDWARE_ant_ctrl,
     HARDWARE_ant_ctrl_compl,
 
+    // Radio frequency
+    HARDWARE_frequency_custom,
+    HARDWARE_frequency_minimum,
+    HARDWARE_frequency_maximum,
+    HARDWARE_frequency_count,
+    HARDWARE_frequency_center,
+
     // Radio power
     HARDWARE_power_enable,
     HARDWARE_power_apc1,

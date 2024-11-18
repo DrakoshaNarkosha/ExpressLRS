@@ -28,6 +28,13 @@
 #define LR1121_RFSW_CTRL hardware_u16_array(HARDWARE_radio_rfsw_ctrl)
 #define LR1121_RFSW_CTRL_COUNT hardware_int(HARDWARE_radio_rfsw_ctrl_count)
 
+// Radio frequency
+#define FREQUENCY_CUSTOM hardware_flag(HARDWARE_frequency_custom)
+#define FREQUENCY_MINIMUM hardware_int(HARDWARE_frequency_minimum)
+#define FREQUENCY_MAXIMUM hardware_int(HARDWARE_frequency_maximum)
+#define FREQUENCY_COUNT hardware_int(HARDWARE_frequency_count)
+#define FREQUENCY_CENTER hardware_int(HARDWARE_frequency_center)
+
 // Radio Antenna
 #define GPIO_PIN_ANT_CTRL hardware_pin(HARDWARE_ant_ctrl)
 #define GPIO_PIN_ANT_CTRL_COMPL hardware_pin(HARDWARE_ant_ctrl_compl)
