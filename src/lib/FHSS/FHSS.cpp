@@ -78,8 +78,8 @@ static inline void updateFrequencySettings()
     if (FREQUENCY_CUSTOM)
     {
         FHSSconfigLocal.domain      = "Custom";
-        FHSSconfigLocal.freq_start  = FREQUENCY_MINIMUM;
-        FHSSconfigLocal.freq_stop   = FREQUENCY_MAXIMUM;
+        FHSSconfigLocal.freq_start  = FREQ_HZ_TO_REG_VAL(FREQUENCY_MINIMUM);
+        FHSSconfigLocal.freq_stop   = FREQ_HZ_TO_REG_VAL(FREQUENCY_MAXIMUM);
         FHSSconfigLocal.freq_count  = FREQUENCY_COUNT;
         FHSSconfigLocal.freq_center = FREQUENCY_CENTER;
     }
