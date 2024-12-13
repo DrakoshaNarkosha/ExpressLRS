@@ -306,6 +306,9 @@ void ICACHE_RAM_ATTR SX127xDriver::CommitOutputPower()
     return;
 
   pwrCurrent = pwrPending & 0xFF;
+  DBGLN("PWR pending %d", pwrPending);
+  DBGLN("PA boost pending pending %d", paBoostPending);
+
   pwrPending = PWRPENDING_NONE;
   hal.writeRegister(SX127X_REG_PA_CONFIG, pwrCurrent, SX12XX_Radio_All);
   hal.writeRegister(SX1278_REG_PA_DAC, paBoostPending, SX12XX_Radio_All);
